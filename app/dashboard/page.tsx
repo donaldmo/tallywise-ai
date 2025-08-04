@@ -1,3 +1,4 @@
+'use client'
 
 import AppSidebar from '@/components/app-sidebar/index'
 import {
@@ -14,8 +15,23 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import { useEffect, useState } from 'react'
 
 export default function Page() {
+
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/protected')
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((err) => setError(err.message));
+  }, []);
+
+  if (error) return <div>Error: {error}</div>;
+  if (!data) return <div>Loading...</div>;
+
   return (
     <SidebarProvider
       style={
