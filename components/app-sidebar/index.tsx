@@ -1,10 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react"
-
+import { Book, Briefcase, FileText, Settings, Bell, MessageSquare, Command } from "lucide-react"
 import { NavUser } from '@/components/nav-user'
-import { Label } from '@/components/ui/label'
 import {
   Sidebar,
   SidebarContent,
@@ -12,15 +10,15 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Switch } from '@/components/ui/switch'
+import { InboxSidebar } from './inbox-sidebar'
+import { SidebarA } from "../sidebar-a"
 
-// This is sample data
+// Updated data with new navMain
 const data = {
   user: {
     name: "shadcn",
@@ -29,33 +27,39 @@ const data = {
   },
   navMain: [
     {
-      title: "Inbox",
+      title: "Accounting",
       url: "#",
-      icon: Inbox,
+      icon: Book,
       isActive: true,
     },
     {
-      title: "Drafts",
+      title: "Payroll",
       url: "#",
-      icon: File,
+      icon: Briefcase,
       isActive: false,
     },
     {
-      title: "Sent",
+      title: "Files",
       url: "#",
-      icon: Send,
+      icon: FileText,
       isActive: false,
     },
     {
-      title: "Junk",
+      title: "Notification",
       url: "#",
-      icon: ArchiveX,
+      icon: Bell,
       isActive: false,
     },
     {
-      title: "Trash",
+      title: "Messages",
       url: "#",
-      icon: Trash2,
+      icon: MessageSquare,
+      isActive: false,
+    },
+    {
+      title: "Settings",
+      url: "#",
+      icon: Settings,
       isActive: false,
     },
   ],
@@ -143,12 +147,31 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
+export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [activeItem, setActiveItem] = React.useState(data.navMain[0])
   const [mails, setMails] = React.useState(data.mails)
   const { setOpen } = useSidebar()
+
+  function renderSidebar(activeItem: typeof data.navMain[0]) {
+    console.log('activeItem: ', activeItem?.title)
+
+    switch (activeItem.title) {
+      case "Accounting":
+        return (
+          <div>
+            <SidebarA activeItem={activeItem} />
+          </div>
+        );
+      case "Payroll":
+      case "Files":
+      case "Notification":
+      case "Messages":
+      case "Settings":
+        return <InboxSidebar activeItem={activeItem} mails={mails} />
+      default:
+        return null
+    }
+  }
 
   return (
     <Sidebar
@@ -156,9 +179,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       className="overflow-hidden *:data-[sidebar=sidebar]:flex-row"
       {...props}
     >
-      {/* This is the first sidebar */}
-      {/* We disable collapsible and adjust width to icon. */}
-      {/* This will make the sidebar appear as icons. */}
+      {/* Icon Sidebar */}
       <Sidebar
         collapsible="none"
         className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r"
@@ -219,44 +240,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarFooter>
       </Sidebar>
 
-      {/* This is the second sidebar */}
-      {/* We disable collapsible and let it fill remaining space */}
-      <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        <SidebarHeader className="gap-3.5 border-b p-4">
-          <div className="flex w-full items-center justify-between">
-            <div className="text-foreground text-base font-medium">
-              {activeItem?.title}
-            </div>
-            <Label className="flex items-center gap-2 text-sm">
-              <span>Unreads</span>
-              <Switch className="shadow-none" />
-            </Label>
-          </div>
-          <SidebarInput placeholder="Type to search..." />
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup className="px-0">
-            <SidebarGroupContent>
-              {mails.map((mail) => (
-                <a
-                  href="#"
-                  key={mail.email}
-                  className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0"
-                >
-                  <div className="flex w-full items-center gap-2">
-                    <span>{mail.name}</span>{" "}
-                    <span className="ml-auto text-xs">{mail.date}</span>
-                  </div>
-                  <span className="font-medium">{mail.subject}</span>
-                  <span className="line-clamp-2 w-[260px] text-xs whitespace-break-spaces">
-                    {mail.teaser}
-                  </span>
-                </a>
-              ))}
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
+      {/* Content Sidebar */}
+      {renderSidebar(activeItem)}
     </Sidebar>
   )
 }
