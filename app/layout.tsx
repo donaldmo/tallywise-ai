@@ -4,16 +4,14 @@ import { GeistMono } from 'geist/font/mono';
 import Providers from './providers';
 import './globals.css';
 
+import { Toaster } from 'react-hot-toast';
+
 export const metadata: Metadata = {
   title: 'tallywise',
   description: 'TallyWise AI - the ultimate AI assistant for your daily tasks.',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en">
       <head>
@@ -27,6 +25,7 @@ html {
       </head>
       <body>
         <Providers>
+          <Toaster />
           {children}
         </Providers>
       </body>
