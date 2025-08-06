@@ -16,10 +16,37 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email already exists' }, { status: 400 });
     }
 
-    const user = new User({ email, password, name });
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Set OTP expiration to 1 day from now
+    const otpExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    const user = new User({
+      email,
+      password,
+      name,
+      otp,
+      otpExpires,
+      otpAttempts: 0,
+      isVerified: false,
+    });
     await user.save();
 
-    return NextResponse.json({ message: 'User created successfully' }, { status: 201 });
+    // TODO: Implement email sending logic here
+    // Example using a hypothetical email service:
+    /*
+    await sendEmail({
+      to: email,
+      subject: 'Verify Your Email',
+      text: `Your OTP is ${otp}. It expires in 24 hours.`,
+    });
+    */
+
+    return NextResponse.json({ 
+      otp,
+      message: 'User created successfully. Please check your email for the OTP.' 
+    }, { status: 201 });
   } catch (error) {
     console.error('Registration error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

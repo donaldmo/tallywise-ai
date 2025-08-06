@@ -1,5 +1,5 @@
 import { GalleryVerticalEnd } from "lucide-react"
-import { LoginForm } from "./login-form"
+import { OTPForm } from "./otp-form"
 import config from "@/lib/config"
 
 
@@ -14,7 +14,7 @@ export default function LoginPage() {
           {config.siteName}
         </a>
         
-        <LoginForm />
+        <OTPForm />
       </div>
     </div>
   )

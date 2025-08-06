@@ -57,12 +57,12 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
       setError('');
 
       // Redirect to dashboard
-      router.push('/dashboard');
+      router.push('/auth/verify-email');
     } catch (err) {
       setSubmitting(false);
       toast.dismiss();
-      toast.error('An error occurred during login');
-      setError('An error occurred during login');
+      toast.error('An error occurred during registration');
+      setError('An error occurred during registration. Please try again.');
     }
   };
 
