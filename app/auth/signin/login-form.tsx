@@ -41,7 +41,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
       if (result?.error) {
         setError('Invalid email or password');
-        return;
+        throw new Error(result.error);
       }
 
       // Dismiss the loading toast and show success message
@@ -118,7 +118,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                     <a
-                      href="#"
+                      href="/auth/forgot-password"
                       className="ml-auto text-sm underline-offset-4 hover:underline"
                     >
                       Forgot your password?
