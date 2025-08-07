@@ -1,5 +1,6 @@
 import { Agenda } from "agenda";
 import sendEmail from "./jobs/send_email";
+import sendInvitationEmail from "./jobs/send_invitation_email";
 
 const mongoConnectionString = process.env.MONGODB_URI;
 
@@ -14,6 +15,7 @@ export const initAgenda = async (): Promise<Agenda> => {
    * Agenda Job Definitions
    */
   sendEmail(agenda);
+  sendInvitationEmail(agenda); // Add the new invitation email job
 
   /**
    * Start Agenda if there are jobs
