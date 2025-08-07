@@ -15,163 +15,71 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { InboxSidebar } from './inbox-sidebar'
-import { SidebarA } from "../sidebar-a"
+import { ContentSidebar } from "./content-sidebar"
+import { useEffect } from "react"
 
-// Updated data with new navMain
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Accounting",
-      url: "#",
-      icon: Book,
-      isActive: true,
-    },
-    {
-      title: "Payroll",
-      url: "#",
-      icon: Briefcase,
-      isActive: false,
-    },
-    {
-      title: "Files",
-      url: "#",
-      icon: FileText,
-      isActive: false,
-    },
-    {
-      title: "Notification",
-      url: "#",
-      icon: Bell,
-      isActive: false,
-    },
-    {
-      title: "Messages",
-      url: "#",
-      icon: MessageSquare,
-      isActive: false,
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
-      isActive: false,
-    },
-  ],
-  mails: [
-    {
-      name: "William Smith",
-      email: "williamsmith@example.com",
-      subject: "Meeting Tomorrow",
-      date: "09:34 AM",
-      teaser:
-        "Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.",
-    },
-    {
-      name: "Alice Smith",
-      email: "alicesmith@example.com",
-      subject: "Re: Project Update",
-      date: "Yesterday",
-      teaser:
-        "Thanks for the update. The progress looks great so far.\nLet's schedule a call to discuss the next steps.",
-    },
-    {
-      name: "Bob Johnson",
-      email: "bobjohnson@example.com",
-      subject: "Weekend Plans",
-      date: "2 days ago",
-      teaser:
-        "Hey everyone! I'm thinking of organizing a team outing this weekend.\nWould you be interested in a hiking trip or a beach day?",
-    },
-    {
-      name: "Emily Davis",
-      email: "emilydavis@example.com",
-      subject: "Re: Question about Budget",
-      date: "2 days ago",
-      teaser:
-        "I've reviewed the budget numbers you sent over.\nCan we set up a quick call to discuss some potential adjustments?",
-    },
-    {
-      name: "Michael Wilson",
-      email: "michaelwilson@example.com",
-      subject: "Important Announcement",
-      date: "1 week ago",
-      teaser:
-        "Please join us for an all-hands meeting this Friday at 3 PM.\nWe have some exciting news to share about the company's future.",
-    },
-    {
-      name: "Sarah Brown",
-      email: "sarahbrown@example.com",
-      subject: "Re: Feedback on Proposal",
-      date: "1 week ago",
-      teaser:
-        "Thank you for sending over the proposal. I've reviewed it and have some thoughts.\nCould we schedule a meeting to discuss my feedback in detail?",
-    },
-    {
-      name: "David Lee",
-      email: "davidlee@example.com",
-      subject: "New Project Idea",
-      date: "1 week ago",
-      teaser:
-        "I've been brainstorming and came up with an interesting project concept.\nDo you have time this week to discuss its potential impact and feasibility?",
-    },
-    {
-      name: "Olivia Wilson",
-      email: "oliviawilson@example.com",
-      subject: "Vacation Plans",
-      date: "1 week ago",
-      teaser:
-        "Just a heads up that I'll be taking a two-week vacation next month.\nI'll make sure all my projects are up to date before I leave.",
-    },
-    {
-      name: "James Martin",
-      email: "jamesmartin@example.com",
-      subject: "Re: Conference Registration",
-      date: "1 week ago",
-      teaser:
-        "I've completed the registration for the upcoming tech conference.\nLet me know if you need any additional information from my end.",
-    },
-    {
-      name: "Sophia White",
-      email: "sophiawhite@example.com",
-      subject: "Team Dinner",
-      date: "1 week ago",
-      teaser:
-        "To celebrate our recent project success, I'd like to organize a team dinner.\nAre you available next Friday evening? Please let me know your preferences.",
-    },
-  ],
+import { useRouter, useSearchParams } from "next/navigation";
+
+const user = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/avatars/shadcn.jpg",
 }
 
+const navMain = [
+  {
+    title: "Accounting",
+    url: "/accounting",
+    icon: Book,
+    isActive: true,
+  },
+  {
+    title: "Payroll",
+    url: "/payroll",
+    icon: Briefcase,
+    isActive: false,
+  },
+  {
+    title: "Files",
+    url: "/files",
+    icon: FileText,
+    isActive: false,
+  },
+  {
+    title: "Notification",
+    url: "/notifications",
+    icon: Bell,
+    isActive: false,
+  },
+  {
+    title: "Messages",
+    url: "/messages",
+    icon: MessageSquare,
+    isActive: false,
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
+    isActive: false,
+  },
+]
+
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [activeItem, setActiveItem] = React.useState(data.navMain[0])
-  const [mails, setMails] = React.useState(data.mails)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const paramValue = searchParams.get("activeItem");
+
+  const [activeItem, setActiveItem] = React.useState(navMain[0])
   const { setOpen } = useSidebar()
 
-  function renderSidebar(activeItem: typeof data.navMain[0]) {
-    console.log('activeItem: ', activeItem?.title)
-
-    switch (activeItem.title) {
-      case "Accounting":
-        return (
-          <div>
-            <SidebarA activeItem={activeItem} />
-          </div>
-        );
-      case "Payroll":
-      case "Files":
-      case "Notification":
-      case "Messages":
-      case "Settings":
-        return <InboxSidebar activeItem={activeItem} mails={mails} />
-      default:
-        return null
+  useEffect(() => {
+    if (paramValue) {
+      setActiveItem(navMain.find(item => item.title === paramValue) || navMain[0]);
     }
-  }
+  }, [paramValue]);
+
+  console.log('activeItem: ', activeItem)
 
   return (
     <Sidebar
@@ -205,7 +113,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
           <SidebarGroup>
             <SidebarGroupContent className="px-1.5 md:px-0">
               <SidebarMenu>
-                {data.navMain.map((item) => (
+                {navMain.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       tooltip={{
@@ -214,13 +122,9 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                       }}
                       onClick={() => {
                         setActiveItem(item)
-                        const mail = data.mails.sort(() => Math.random() - 0.5)
-                        setMails(
-                          mail.slice(
-                            0,
-                            Math.max(5, Math.floor(Math.random() * 10) + 1)
-                          )
-                        )
+
+                        router.push(`/dashboard/${item.url}?activeItem=${item.title}`)
+
                         setOpen(true)
                       }}
                       isActive={activeItem?.title === item.title}
@@ -236,12 +140,14 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={data.user} />
+          <NavUser user={user} />
         </SidebarFooter>
       </Sidebar>
 
       {/* Content Sidebar */}
-      {renderSidebar(activeItem)}
+      {/* {renderSidebar(activeItem)} */}
+
+      <ContentSidebar activeItem={activeItem} />
     </Sidebar>
   )
 }
