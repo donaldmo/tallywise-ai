@@ -10,37 +10,37 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
-      <h1 className="text-3xl font-bold">Settings</h1>
+      <h1 className="text-2xl font-bold">Settings</h1>
 
       <Tabs defaultValue="workspaces" className="w-full" onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="members">Team Members</TabsTrigger>
+          <TabsTrigger value="invitations">Pending Invitations</TabsTrigger>
           <TabsTrigger value="workspaces">Workspaces</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile">
+        <TabsContent value="members">
           <Card>
             <CardHeader>
-              <CardTitle>Profile Settings</CardTitle>
-              <CardDescription>Manage your profile information.</CardDescription>
+              <CardTitle>Team Members</CardTitle>
+              <CardDescription>Manage your team members.</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Profile settings form goes here */}
-              <p>Profile settings content...</p>
+              {/* Team members settings form goes here */}
+              <p>Team members settings content...</p>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="account">
+        <TabsContent value="invitations">
           <Card>
             <CardHeader>
-              <CardTitle>Account Settings</CardTitle>
-              <CardDescription>Manage your account preferences.</CardDescription>
+              <CardTitle>Pending Invitations</CardTitle>
+              <CardDescription>Manage your pending invitations.</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Account settings form goes here */}
-              <p>Account settings content...</p>
+              {/* Pending invitations settings form goes here */}
+              <p>Pending invitations settings content...</p>
             </CardContent>
           </Card>
         </TabsContent>
